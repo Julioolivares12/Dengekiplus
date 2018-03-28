@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Dengeki-plus</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="etiquetaB">ANIME BLU-RAY</string>
+    <string name="inicio">inicio</string>
+    <string name="a1080">anime 1080</string>
+    <string name="a720">anime 720</string>
+    <string name="descripcionAnime1080">imagen de las publicaciones de dangeki</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
