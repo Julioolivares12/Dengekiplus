@@ -1,6 +1,7 @@
 package com.developer.julio.dangeki_plus
 
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
@@ -47,6 +48,7 @@ class InicioFragment : Fragment() {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
+    
     private lateinit var progressBar : ProgressBar
     private var mListener: OnFragmentInteractionListener? = null
     lateinit var anim : ObjectAnimator
@@ -70,11 +72,19 @@ class InicioFragment : Fragment() {
       *   progressBar = view.findViewById(R.id.barCarga)
         anim = ObjectAnimator.ofInt(progressBar,"progress",0,100)*/
         val url="http://dengeki-plus.me/wp-json/wp/v2/posts/"
-        getData(view,url)
+        getData(view,url,context)
+
         return view
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+    }
+    override fun onResume() {
+        super.onResume()
+    }
 
     fun onButtonPressed(uri: Uri) {
         if (mListener != null) {
@@ -118,9 +128,9 @@ class InicioFragment : Fragment() {
         }
     }
     //mi metodos
-    fun getData(view: View,url:String){
+    fun getData(view: View,url:String,context: Context?){
         var jsonObject: JSONObject
-        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET,url,null,Response.Listener { 
+        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET,url,null,Response.Listener {
             response ->
             for (i in 0 until response.length()){
                 jsonObject = response.getJSONObject(i)
@@ -130,19 +140,20 @@ class InicioFragment : Fragment() {
                 var imagen = jsonObject.getString("featured_media")
                 var imagenUrl = "http://dengeki-plus.me/wp-json/wp/v2/media/"+imagen
 
-                var animes = animesInicio(id,title,descripcion,imagenUrl)
-                animeList.add(animes)
+               var  animes = animesInicio(id,title,descripcion,imagenUrl)
 
+                animeList.add(animes)
+                adapter.InicioRecyclerAdapter(animeList,context!!.applicationContext)
+                animesRecyclerView = view.findViewById(R.id.animesInicio)
+                animesRecyclerView.setHasFixedSize(true)
+                animesRecyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
+                animesRecyclerView.layoutManager = LinearLayoutManager(context!!.applicationContext)
+                animesRecyclerView.adapter=adapter
             }
-            adapter.InicioRecyclerAdapter(animeList,activity.applicationContext)
-            animesRecyclerView = view.findViewById(R.id.animesInicio)
-            animesRecyclerView.setHasFixedSize(true)
-            animesRecyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
-            animesRecyclerView.layoutManager = LinearLayoutManager(activity.applicationContext)
-            animesRecyclerView.adapter=adapter
+
             Log.i("animes lista",animeList.toString())
         },Response.ErrorListener { error -> error.printStackTrace()  })
-        VolleyS.getInstance(context.applicationContext).addToRequestQueue(jsonArrayRequest)
+        VolleyS.getInstance(context!!.applicationContext).addToRequestQueue(jsonArrayRequest)
     }
 
   }
